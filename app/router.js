@@ -6,15 +6,25 @@
 module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
-  router.resources('admin_account', '/api/v1/admin/account', controller.v1.admin.account);
-
+  // router.resources('admin_account', '/api/v1/admin/account', controller.v1.admin.account);
 
   const version = 'v1';
   const apiPrefix = `/api/${version}`;
 
+  const adminAccountRouter = app.router.namespace(`${apiPrefix}/admin/account`);
+  adminAccountRouter.resources('admin_account', '/', controller.v1.admin.account);
+
   const adminBalancesRouter = app.router.namespace(`${apiPrefix}/admin/balances`);
   adminBalancesRouter.post('admin_balances_transfer', '/transfer', controller.v1.admin.balances.transfer);
   adminBalancesRouter.post('admin_balances_transferKeepAlive', '/transfer_keep_alive', controller.v1.admin.balances.transferKeepAlive);
+
+  const deriveBalancesRouter = app.router.namespace(`${apiPrefix}/derive/balances`);
+  deriveBalancesRouter.get('derive_balances_all', '/all/:address', controller.v1.derive.balances.all);
+  deriveBalancesRouter.get('derive_balances_votingBalances', '/voting_balances', controller.v1.derive.balances.votingBalances);
+
+  const deriveAccountsRouter = app.router.namespace(`${apiPrefix}/derive/accounts`);
+  deriveAccountsRouter.get('derive_accounts_indexes', '/indexes', controller.v1.derive.accounts.indexes);
+  deriveAccountsRouter.get('derive_accounts_info', '/info/:address', controller.v1.derive.accounts.info);
 
   const queryBalancesRouter = app.router.namespace(`${apiPrefix}/query/balances`);
   queryBalancesRouter.get('query_balances_account', '/account/:account', controller.v1.query.balances.account);

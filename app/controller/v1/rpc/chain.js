@@ -1,30 +1,44 @@
 'use strict';
 
-const Controller = require('egg').Controller;
-
-class ChainController extends Controller {
+const BaseController = require('../../../core/base_controller');
+class ChainController extends BaseController {
   async getBlock() {
-    const { ctx } = this;
-    ctx.validate({ hash: { type: 'hash', required: true } }, { hash: ctx.params.hash });
-    const data = await this.service.polkadot.rpc.chain.getBlock(ctx.params.hash);
-    ctx.body = data;
+    try {
+      const { ctx } = this;
+      ctx.validate({ hash: { type: 'hash', required: true } }, { hash: ctx.params.hash });
+      const data = await this.service.polkadot.rpc.chain.getBlock(ctx.params.hash);
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async getBlockHash() {
-    const { ctx } = this;
-    ctx.validate({ blockNumber: { type: 'int', required: true } }, { blockNumber: Number(ctx.params.blockNumber) });
-    const data = await this.service.polkadot.rpc.chain.getBlockHash(ctx.params.blockNumber);
-    ctx.body = data;
+    try {
+      const { ctx } = this;
+      ctx.validate({ blockNumber: { type: 'int', required: true } }, { blockNumber: Number(ctx.params.blockNumber) });
+      const data = await this.service.polkadot.rpc.chain.getBlockHash(ctx.params.blockNumber);
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async getFinalizedHead() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.chain.getFinalizedHead();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.chain.getFinalizedHead();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async getHeader() {
-    const { ctx } = this;
-    ctx.validate({ hash: { type: 'hash', required: true } }, { hash: ctx.params.hash });
-    const data = await this.service.polkadot.rpc.chain.getHeader(ctx.params.hash);
-    ctx.body = data;
+    try {
+      const { ctx } = this;
+      ctx.validate({ hash: { type: 'hash', required: true } }, { hash: ctx.params.hash });
+      const data = await this.service.polkadot.rpc.chain.getHeader(ctx.params.hash);
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
 }
 

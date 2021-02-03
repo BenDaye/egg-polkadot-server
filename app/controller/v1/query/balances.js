@@ -1,29 +1,43 @@
 'use strict';
 
-const Controller = require('egg').Controller;
+const BaseController = require('../../../core/base_controller');
 
-class BalancesController extends Controller {
+class BalancesController extends BaseController {
   async account() {
-    const { ctx } = this;
-    ctx.validate({ account: { type: 'string', required: true } }, { account: ctx.params.account });
-    const data = await this.service.polkadot.query.balances.account(ctx.params.account);
-    ctx.body = data;
+    try {
+      const { ctx } = this;
+      ctx.validate({ account: { type: 'string', required: true } }, { account: ctx.params.account });
+      const data = await this.service.polkadot.query.balances.account(ctx.params.account);
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async locks() {
-    const { ctx } = this;
-    ctx.validate({ account: { type: 'string', required: true } }, { account: ctx.params.account });
-    const data = await this.service.polkadot.query.balances.locks(ctx.params.account);
-    ctx.body = data;
+    try {
+      const { ctx } = this;
+      ctx.validate({ account: { type: 'string', required: true } }, { account: ctx.params.account });
+      const data = await this.service.polkadot.query.balances.locks(ctx.params.account);
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async storageVersion() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.query.balances.storageVersion();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.query.balances.storageVersion();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async totalIssuance() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.query.balances.totalIssuance();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.query.balances.totalIssuance();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
 }
 

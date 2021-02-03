@@ -1,57 +1,87 @@
 'use strict';
 
-const Controller = require('egg').Controller;
+const BaseController = require('../../../core/base_controller');
 
-class SystemController extends Controller {
+class SystemController extends BaseController {
   async chain() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.chain();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.chain();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async chainType() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.chainType();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.chainType();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async health() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.health();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.health();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async name() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.name();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.name();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async networkState() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.networkState();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.networkState();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async nodeRoles() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.nodeRoles();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.nodeRoles();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async peers() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.peers();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.peers();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async properties() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.properties();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.properties();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async syncState() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.syncState();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.syncState();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
   async version() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.system.version();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.system.version();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
 }
 

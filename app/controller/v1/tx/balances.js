@@ -1,14 +1,14 @@
 'use strict';
 
-const Controller = require('egg').Controller;
-
-class BalancesController extends Controller {
+const BaseController = require('../../../core/base_controller');
+class BalancesController extends BaseController {
   async forceTransfer(source, dest, value) {
-    const { ctx } = this;
-    const forceTransfer = await this.service.polkadot.tx.balances.forceTransfer(source, dest, value);
-    ctx.body = {
-      forceTransfer,
-    };
+    try {
+      const data = await this.service.polkadot.tx.balances.forceTransfer(source, dest, value);
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
 }
 

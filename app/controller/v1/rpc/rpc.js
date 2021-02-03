@@ -1,12 +1,14 @@
 'use strict';
 
-const Controller = require('egg').Controller;
-
-class RpcController extends Controller {
+const BaseController = require('../../../core/base_controller');
+class RpcController extends BaseController {
   async methods() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.rpc.methods();
-    ctx.body = data;
+    try {
+      const data = await this.service.polkadot.rpc.rpc.methods();
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
 }
 

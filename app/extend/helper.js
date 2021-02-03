@@ -3,6 +3,8 @@
 const mnemonicGenerate = require('@polkadot/util-crypto').mnemonicGenerate;
 const randomAsHex = require('@polkadot/util-crypto').randomAsHex;
 const Keyring = require('@polkadot/keyring').Keyring;
+const formatBalance = require('@polkadot/util').formatBalance;
+const formatNumber = require('@polkadot/util').formatNumber;
 
 module.exports = {
   async keyring() {
@@ -33,5 +35,15 @@ module.exports = {
   async keypairAlice() {
     const keyring = await this.keyring();
     return keyring.addFromUri('//Alice', { name: 'Alice Default' });
+  },
+  async formatBalance(value) {
+    const properties = await this.ctx.app.polkadot.rpc.system.properties();
+    const decimals = properties.get('tokenDecimals').toJSON();
+    const unit = properties.get('tokenSymbol').toJSON();
+    formatBalance.setDefaults({ decimals, unit });
+    return formatBalance(value);
+  },
+  formatNumber(value) {
+    return formatNumber(value);
   },
 };

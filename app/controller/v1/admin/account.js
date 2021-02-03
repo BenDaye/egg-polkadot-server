@@ -1,18 +1,18 @@
 'use strict';
 
-const Controller = require('egg').Controller;
-
-class AccountController extends Controller {
+const BaseController = require('../../../core/base_controller');
+class AccountController extends BaseController {
   async create() {
-    const { ctx } = this;
-    const mnemonic = await this.service.account.mnemonicGenerate();
-    const keyringPairJson = await this.service.account.createFromMnemonic({ mnemonic });
-    ctx.body = {
-      data: {
+    try {
+      const mnemonic = await this.service.account.mnemonicGenerate();
+      const keyringPairJson = await this.service.account.createFromMnemonic({ mnemonic });
+      this.success({
         mnemonic,
         keyringPairJson,
-      },
-    };
+      });
+    } catch (err) {
+      this.error(err);
+    }
   }
 }
 

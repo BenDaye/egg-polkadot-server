@@ -1,8 +1,6 @@
 'use strict';
 
-// const Controller = require('egg').Controller;
 const BaseController = require('../../../core/base_controller');
-
 class BalancesController extends BaseController {
   async transfer() {
     try {
@@ -24,7 +22,6 @@ class BalancesController extends BaseController {
       const data = await this.service.balances.transfer(ctx.request.body);
       this.success(data);
     } catch (err) {
-      this.logger.error(err);
       this.error(err);
     }
   }
@@ -48,7 +45,6 @@ class BalancesController extends BaseController {
       const data = await this.service.balances.transferKeepAlive(ctx.request.body);
       this.success(data);
     } catch (err) {
-      this.logger.error(err);
       this.error(err);
     }
   }

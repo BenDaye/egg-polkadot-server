@@ -1,12 +1,16 @@
 'use strict';
 
-const Controller = require('egg').Controller;
+const BaseController = require('../../../core/base_controller');
 
-class StateController extends Controller {
+class StateController extends BaseController {
   async getMetadata() {
-    const { ctx } = this;
-    const data = await this.service.polkadot.rpc.state.getMetadata(ctx.query);
-    ctx.body = data;
+    try {
+      const { ctx } = this;
+      const data = await this.service.polkadot.rpc.state.getMetadata(ctx.query);
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
   }
 }
 
