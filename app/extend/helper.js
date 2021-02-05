@@ -1,47 +1,75 @@
 'use strict';
 
-const mnemonicGenerate = require('@polkadot/util-crypto').mnemonicGenerate;
-const randomAsHex = require('@polkadot/util-crypto').randomAsHex;
 const Keyring = require('@polkadot/keyring').Keyring;
-const formatBalance = require('@polkadot/util').formatBalance;
-const formatNumber = require('@polkadot/util').formatNumber;
+const {
+  mnemonicGenerate,
+  mnemonicToMiniSecret,
+  mnemonicValidate,
+  randomAsHex,
+} = require('@polkadot/util-crypto');
+const {
+  formatBalance,
+  formatNumber,
+  u8aToHex,
+  hexToU8a,
+} = require('@polkadot/util');
+
+let keyring;
 
 module.exports = {
-  async keyring() {
+  async initKeyring() {
+    if (keyring) {
+      return keyring;
+    }
     const properties = await this.ctx.app.polkadot.rpc.system.properties();
     const ss58Format = properties.ss58Format.toHuman();
     // !!!: export declare type KeypairType = 'ed25519' | 'sr25519' | 'ecdsa' | 'ethereum';
     const type = 'sr25519';
-    return new Keyring({ ss58Format, type });
+    keyring = new Keyring({ ss58Format, type });
+    return keyring;
   },
   mnemonicGenerate() {
     return mnemonicGenerate();
   },
+  mnemonicToMiniSecret(mnemonic) {
+    if (!mnemonicValidate(mnemonic)) {
+      throw new TypeError('must be mnemonic string');
+    }
+    return u8aToHex(mnemonicToMiniSecret(mnemonic));
+  },
   seedGenerate(length = 32) {
     return randomAsHex(length);
   },
-  async createFromMnemonic({ mnemonic, derivationPath = '', meta = {}, keypairType = 'sr25519' }) {
-    const keyring = await this.keyring();
-    return keyring.createFromUri(`${mnemonic}${derivationPath}`, meta, keypairType).toJson();
-  },
   async addFromMnemonic({ mnemonic, meta = {}, keypairType = 'sr25519' }) {
-    const keyring = await this.keyring();
+    if (!mnemonicValidate(mnemonic)) {
+      throw new TypeError('must be mnemonic string');
+    }
+    const keyring = await this.initKeyring();
     return keyring.addFromMnemonic(mnemonic, meta, keypairType);
   },
-  async addFromUri({ uri }) {
-    const keyring = await this.keyring();
-    return keyring.addFromUri(uri);
+  async addFromSeed({ seed, meta = {}, keypairType = 'sr25519' }) {
+    const keyring = await this.initKeyring();
+    seed = hexToU8a(seed);
+    return keyring.addFromSeed(seed, meta, keypairType);
   },
-  async keypairAlice() {
-    const keyring = await this.keyring();
-    return keyring.addFromUri('//Alice', { name: 'Alice Default' });
+  async addFromUri({ uri, meta = {}, keypairType = 'sr25519' }) {
+    const keyring = await this.initKeyring();
+    return keyring.addFromUri(uri, meta, keypairType);
   },
-  async formatBalance(value) {
+  async addFromJson({ json, ignoreChecksum = false }) {
+    const keyring = await this.initKeyring();
+    return keyring.addFromJson(json, ignoreChecksum);
+  },
+  async createFromUri({ uri, meta = {}, keypairType = 'sr25519' }) {
+    const keyring = await this.initKeyring();
+    return keyring.createFromUri(uri, meta, keypairType);
+  },
+  async formatBalance(value, opts, de) {
     const properties = await this.ctx.app.polkadot.rpc.system.properties();
     const decimals = properties.get('tokenDecimals').toJSON();
     const unit = properties.get('tokenSymbol').toJSON();
     formatBalance.setDefaults({ decimals, unit });
-    return formatBalance(value);
+    return formatBalance(value, opts, de);
   },
   formatNumber(value) {
     return formatNumber(value);

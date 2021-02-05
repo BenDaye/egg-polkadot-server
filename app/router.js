@@ -17,6 +17,7 @@ module.exports = app => {
   const adminBalancesRouter = app.router.namespace(`${apiPrefix}/admin/balances`);
   adminBalancesRouter.post('admin_balances_transfer', '/transfer', controller.v1.admin.balances.transfer);
   adminBalancesRouter.post('admin_balances_transferKeepAlive', '/transfer_keep_alive', controller.v1.admin.balances.transferKeepAlive);
+  adminBalancesRouter.get('admin_balances_queryAll', '/:address', controller.v1.admin.balances.queryAll);
 
   const deriveBalancesRouter = app.router.namespace(`${apiPrefix}/derive/balances`);
   deriveBalancesRouter.get('derive_balances_all', '/all/:address', controller.v1.derive.balances.all);

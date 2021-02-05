@@ -1,25 +1,15 @@
 'use strict';
 
 const BaseController = require('../../../core/base_controller');
+const transferRule = require('../../../model/rule').transferRule;
 class BalancesController extends BaseController {
   async transfer() {
     try {
       const { ctx } = this;
-      ctx.validate({
-        signer: {
-          type: 'string',
-          required: true,
-        },
-        dest: {
-          type: 'string',
-          required: true,
-        },
-        value: {
-          type: 'number',
-          required: true,
-        },
-      });
-      const data = await this.service.balances.transfer(ctx.request.body);
+      ctx.validate(transferRule);
+      const { signer, dest, value } = ctx.request.body;
+      const _signer = await this.service.account.createFromSigner(signer);
+      const data = await this.service.balances.transfer({ signer: _signer, dest, value });
       this.success(data);
     } catch (err) {
       this.error(err);
@@ -28,21 +18,23 @@ class BalancesController extends BaseController {
   async transferKeepAlive() {
     try {
       const { ctx } = this;
-      ctx.validate({
-        signer: {
-          type: 'string',
-          required: true,
+      ctx.validate(transferRule);
+      const { signer, dest, value } = ctx.request.body;
+      const _signer = await this.service.account.createFromSigner(signer);
+      const data = await this.service.balances.transferKeepAlive({ signer: _signer, dest, value });
+      this.success(data);
+    } catch (err) {
+      this.error(err);
+    }
+  }
+  async queryAll() {
+    try {
+      this.ctx.validate({
+        address: {
+          type: 'address',
         },
-        dest: {
-          type: 'string',
-          required: true,
-        },
-        value: {
-          type: 'number',
-          required: true,
-        },
-      });
-      const data = await this.service.balances.transferKeepAlive(ctx.request.body);
+      }, this.ctx.params);
+      const data = await this.service.balances.queryAll(this.ctx.params.address);
       this.success(data);
     } catch (err) {
       this.error(err);

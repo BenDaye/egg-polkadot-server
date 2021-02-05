@@ -1,21 +1,37 @@
 'use strict';
 
-const isHex = require('@polkadot/util').isHex;
-const mnemonicValidate = require('@polkadot/util-crypto').mnemonicValidate;
+const { mnemonicValidate } = require('@polkadot/util-crypto');
+const { decodeAddress, encodeAddress } = require('@polkadot/keyring');
+const { hexToU8a, isHex } = require('@polkadot/util');
 
 module.exports = app => {
   app.validator.addRule('hash', function(rule, value) {
     try {
-      isHex(value);
+      if (isHex(value)) {
+        throw new TypeError('must be hash string');
+      }
     } catch (err) {
-      return this.t('must be hash string');
+      return this.t(err.message || err);
     }
   });
   app.validator.addRule('mnemonic', function(rule, value) {
     try {
-      mnemonicValidate(value);
+      if (!mnemonicValidate(value)) {
+        throw new TypeError('must be mnemonic string');
+      }
     } catch (err) {
-      return this.t('must be mnemonic string');
+      return this.t(err.message || err);
+    }
+  });
+  app.validator.addRule('address', (rule, value) => {
+    try {
+      encodeAddress(
+        isHex(value)
+          ? hexToU8a(value)
+          : decodeAddress(value)
+      );
+    } catch (err) {
+      return this.t(err.message || err);
     }
   });
 };

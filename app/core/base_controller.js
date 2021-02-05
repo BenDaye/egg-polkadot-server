@@ -13,7 +13,7 @@ class BaseController extends Controller {
 
   error(err) {
     this.logger.error(err);
-    err = err.message || err || 'Internal Server Error';
+    err = err.errors || err.message || err || 'Internal Server Error';
     // this.ctx.throw(500, err);
     this.ctx.body = {
       status: 1,
