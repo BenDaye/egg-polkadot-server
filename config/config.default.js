@@ -28,7 +28,7 @@ module.exports = appInfo => {
     //   },
     // },
     security: {
-      domainWhiteList: [ 'http://127.0.0.1:7001' ],
+      domainWhiteList: [ 'http://127.0.0.1:7001', 'https://api-polkadot.bendaye.vip' ],
       csrf: false,
     },
     polkadot: {

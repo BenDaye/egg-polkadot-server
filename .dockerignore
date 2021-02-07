@@ -1,0 +1,10 @@
+logs
+run
+test
+node_modules
+deploy
+.vscode
+.github
+.git
+.gitignore
+package-lock.json
